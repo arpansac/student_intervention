@@ -11854,14 +11854,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[37]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Calculate number of students</span>
 <span class="n">n_students</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="c1"># TODO: Calculate number of features</span>
-<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">n_features</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
 
 <span class="c1"># TODO: Calculate passing students</span>
 <span class="n">n_passed</span> <span class="o">=</span> <span class="n">student_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">student_data</span><span class="p">[</span><span class="s1">&#39;passed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -11891,7 +11891,7 @@ div#notebook {
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Total number of students: 395
-Number of features: 31
+Number of features: 30
 Number of students who passed: 265
 Number of students who failed: 130
 Graduation rate of the class: 67.09%
@@ -12164,21 +12164,22 @@ Testing set has 95 samples.
 <p>Strengths:</p>
 <ul>
 <li>Highly scalable (useful in case of large datasets).</li>
-<li>Gives good results/predictions when different features in a dataset are independent of each other.</li>
-<li>When this assumption of independence of features holds, this classifier needs less training data.</li>
+<li>Gives good results/predictions when different features in a dataset are conditionally independent of each other.</li>
+<li>When this assumption of conditional independence of features holds, this classifier needs less training data.</li>
 </ul>
 <p>Weaknesses:</p>
 <ul>
 <li>Relies on the assumption of independence of features.</li>
 <li>In case of a categorical variable with a value which was not present in the test data set, GNB will not be able to make a prediction on that. It'll make it 0 probability.</li>
 </ul>
-<p>Application in this problem: Though this dataset is not large enough, but again observing it shows that all the features are independent of each other. Hence making GNB a good candidate.</p>
+<p>Application in this problem: Though this dataset is not large enough, but again observing it shows that the features are independent of each other. For example, a student's Pstatus (parent's cohabitation status) is not related to the traveltime or the studytime, another one could be that the feature internet cannot be considered (as an observer of the number based data) responsible or in any way related to Mjob or Fjob or even health.</p>
+<p>Hence making GNB a good candidate.</p>
 <p><strong>K-Nearest Neighbors (KNeighbors)</strong></p>
 <p>Real-world application: Product recommendation system, if the seller knows that a user likes a certain product, then based on the other features of the user and the product, the seller can predict a set of products which might also be liked by the user.</p>
 <p>Strengths:</p>
 <ul>
 <li>It is non-parametric, that is, doesn't make any assumptions about the distribution of the data.</li>
-<li>It's a lazy learner, which means, it doesn't expect a generalized dataset and adapts quickly to the changes in data during the testing phase also.</li>
+<li>It's a lazy learner, which means, it adapts quickly to the changes in data during the testing phase also.</li>
 <li>Insensitive to outliers</li>
 </ul>
 <p>Weaknesses:</p>
@@ -12190,7 +12191,7 @@ Testing set has 95 samples.
 <p>Real-world application: Recognition of handwriting/handwritten characters.</p>
 <p>Strengths:</p>
 <ul>
-<li>Useful for both learly separable and non linearly separable data</li>
+<li>Useful for both linearly separable and non linearly separable data</li>
 <li>Can be used with semi supervised learning wherein some data is labeled and some might not be labeled</li>
 </ul>
 <p>Weaknesses:</p>
@@ -12198,6 +12199,7 @@ Testing set has 95 samples.
 <li>Could have a poor performance if the number of features is much greater than the number of samples</li>
 <li>SVM's don't directly provide probability estimates.</li>
 </ul>
+<p>Application in this problem: SVMs work with non linearly separable data, which applies to this dataset, the size of the dataset is small due to which the performance shouldn't be very bad. Additionally SVMs work well when there is less noise in the dataset. This dataset is having less noise as we have already preprocessed the columns.</p>
 
 </div>
 </div>
@@ -12584,7 +12586,7 @@ F1 score for test set: 0.7838.
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
 <p>By experimenting and analysing different models of Supervised Machine Learning, I've come to a conclusion that K-Nearest Neighbors(KNN) would be the best option for us to implement on the current scenario.</p>
-<p>The way this model works is that it creates a group according to matching criteria of the students who passed and failed from the training data. As and when new scenarios come up, it adjusts the boundaries which define the condition of prediction of a student passing or failing. This means, if I have a set of 100 students whom I know have passed or failed, I will then make a map plot of these students and define the boundaries according to different conditions of the students for passing and failing. Next, when I want to know whether a new student will pass or fail, I will simply plot him/her on the map and decide as to which set (passing or failing) does this student fall nearest to and assign him to that group. However, if an exception occurs, the model adjusts accordingly.</p>
+<p>In simple words let's consider a scenario, there are 2 students, first has failed and the second has passed wherein both the students have specific values for features (which we have in the dataset, example internet availability, family support for education, extra curricular activities, etc). Right now these are the values which define whether a student will fail or pass. Now I want to predict whether a new 3rd student will fail or pass. KNN matches the different features of the 3rd student with the first and second student and it puts the 3rd student into the class of the student with whom the maximum features match (let's assume it matches with the passing student). Now there are 2 students in the passing category and 1 in the failing. Now say there's another new student whom we want to predict about, then we repeat the last process, the only difference is that if the same count of features match with both the classes, then the prediction will be passing because of the majority of neighbours in the list of matching categories.</p>
 
 </div>
 </div>
